@@ -117,7 +117,7 @@ public class Model
                                  Double.parseDouble(splitLine[8]),1};
 
         translationMatrix = new DoubleMatrix().eye(4);
-        translationMatrix.putColumn(3,new DoubleMatrix(transColumn));//,transColumn);
+        translationMatrix.putColumn(3,new DoubleMatrix(transColumn));
     }
 
     public void transformAllVertices()
@@ -147,7 +147,7 @@ public class Model
             vector = R.mmul(vector);
             transformedObjectVertices.putRow(row,vector);
             ++row;
-            //System.out.println("Dot:" + vector);
+            System.out.println("Dot:" + vector);
         }
 
         //4x4 I * scale = scale on all diagonal entries
@@ -158,7 +158,6 @@ public class Model
 
         transformedObjectVertices = transformedObjectVertices.mmul(S);
         transformedObjectVertices = transformedObjectVertices.mmul(T);
-        Geometry.normalize(transformedObjectVertices);
         System.out.println("TRANSFORMED:");
         for(DoubleMatrix tv : transformedObjectVertices.rowsAsList())
         {
