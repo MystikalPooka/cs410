@@ -94,14 +94,16 @@ public class Model
         String[] splitLine = line.split(" ");
         double[] rotColumn = { Double.parseDouble(splitLine[1]),
                                Double.parseDouble(splitLine[2]),
-                               Double.parseDouble(splitLine[3]),1};
+                               Double.parseDouble(splitLine[3]),0};
 
         rotationMatrix = createRotationMatrixFromSingleRow(new DoubleMatrix(1,4,rotColumn));
 
         angleTheta = Double.parseDouble(splitLine[4]);
 
+        angleTheta = Math.toRadians(angleTheta);
+
         double[] firstRow = new double[]{Math.cos(angleTheta),-Math.sin(angleTheta),0,0};
-        double[] secondRow = new double[]{Math.sin(angleTheta),-Math.cos(angleTheta),0,0};
+        double[] secondRow = new double[]{Math.sin(angleTheta),Math.cos(angleTheta),0,0};
         double[] thirdRow = new double[]{0,0,1,0};
         double[] fourthRow = new double[]{0,0,0,1};
         axisAngleRotMatrix = new DoubleMatrix(new double[][]{firstRow,
@@ -114,7 +116,8 @@ public class Model
                                  Double.parseDouble(splitLine[7]),
                                  Double.parseDouble(splitLine[8]),1};
 
-        translationMatrix = new DoubleMatrix(4,1,transColumn);
+        translationMatrix = new DoubleMatrix().eye(4);
+        translationMatrix.putColumn(3,new DoubleMatrix(transColumn));//,transColumn);
     }
 
     public void transformAllVertices()
@@ -140,7 +143,7 @@ public class Model
         for(DoubleMatrix vector : objectVertices)
         {
             //System.out.println("V:" + vector);
-            vector.put(3,1);
+            vector.put(3,0);
             vector = R.mmul(vector);
             transformedObjectVertices.putRow(row,vector);
             ++row;
@@ -170,22 +173,22 @@ public class Model
         rotMatrix = DoubleMatrix.concatVertically(W,rotMatrix);
 
         DoubleMatrix M = getOrthonormalRowVector(W);
-        DoubleMatrix U = homogenousNorm(getCrossProduct(W,M));
-        DoubleMatrix V = getCrossProduct(U,W);
+        DoubleMatrix U = getNormedCrossProduct(W,M);
+        DoubleMatrix V = getNormedCrossProduct(U,W);
         if(U.dot(W) != 0) System.out.println("W.U not 0");
         if(U.dot(M) != 0) System.out.println("M.U not 0");
 
         rotMatrix = DoubleMatrix.concatVertically(V,rotMatrix);
         rotMatrix = DoubleMatrix.concatVertically(U,rotMatrix);
         rotMatrix = DoubleMatrix.concatVertically(rotMatrix, new DoubleMatrix(new double[][]{{0, 0, 0, 1}}));
-        Geometry.normalizeRows(rotMatrix);
 
         return rotMatrix;
     }
 
     private DoubleMatrix getOrthonormalRowVector(DoubleMatrix row)
     {
-        DoubleMatrix orthoRow = new DoubleMatrix(1,4);
+        DoubleMatrix orthoRow = new DoubleMatrix(row.getColumns());
+
         if(row.get(2) == 0)
         {
             orthoRow.put(2,1);
@@ -195,29 +198,27 @@ public class Model
             orthoRow.put(row.argmin(),1);
         }
 
-        orthoRow.put(3,1);
-
         Geometry.normalize(orthoRow);
         return orthoRow;
     }
 
-    private DoubleMatrix getCrossProduct(DoubleMatrix a, DoubleMatrix b)
+    private DoubleMatrix getNormedCrossProduct(DoubleMatrix a, DoubleMatrix b)
     {
-        DoubleMatrix cross = new DoubleMatrix(1,3);
+        DoubleMatrix cross = new DoubleMatrix(1,4);
 
-        DoubleMatrix i = new DoubleMatrix(new double[][]{{1,0,0}});
+        DoubleMatrix i = new DoubleMatrix(new double[][]{{1,0,0,0}});
         double a2b3 = a.get(1) * b.get(2);
         double a3b2 = a.get(2) * b.get(1);
         double iScalar = a2b3 - a3b2;
         i.mmuli(iScalar);
 
-        DoubleMatrix j = new DoubleMatrix(new double[][]{{0,1,0}});
+        DoubleMatrix j = new DoubleMatrix(new double[][]{{0,1,0,0}});
         double a3b1 = a.get(2) * b.get(0);
         double a1b3 = a.get(0) * b.get(2);
         double jScalar = a3b1 - a1b3;
         j.mmuli(jScalar);
 
-        DoubleMatrix k = new DoubleMatrix(new double[][]{{0,0,1}});
+        DoubleMatrix k = new DoubleMatrix(new double[][]{{0,0,1,0}});
         double a1b2 = a.get(0) * b.get(1);
         double a2b1 = a.get(1) * b.get(0);
         double kScalar = a1b2 - a2b1;
@@ -226,20 +227,8 @@ public class Model
         cross.addi(i);
         cross.addi(j);
         cross.addi(k);
-        return cross;
-    }
-
-    private DoubleMatrix homogenousNorm(DoubleMatrix hVector)
-    {
-        Geometry.normalize(hVector);
-
-        double div = 1;
-        if(hVector.columns < 4)
-        {
-            hVector.resize(4,4);
-        }
-        div = hVector.get(3);
-        return hVector.divi(div);
+        cross.put(3,0);
+        return Geometry.normalize(cross);
     }
 
     public void saveAsObj(String folderPath)
