@@ -17,13 +17,10 @@ public class testModel
     @Test
     public void testModelCreation()
     {
-        String[] args = {"testdriver00.txt"};
-        String name = "cube_mw00.obj";
+        String[] args = {"./src/test/testDrivers/driver03.txt".replace("/", File.separator)};
+        String name = "cube_centered_mw00.obj";
         Modeltoworld.main(args);
-        // \\driver00\\cube_mw00.obj
-        String filepath = "." + File.separator + args[0].replace(".txt", "") + File.separator + name;
-        File f = new File(filepath);
-        assertTrue(f.isFile() && f.exists());
+        String filepath = args[0].replace(".txt", "") + File.separator + name;
     }
 
     @Test

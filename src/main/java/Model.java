@@ -31,7 +31,7 @@ public class Model
     public Model(String objectName, String line)
     {
         setName(objectName);
-        setReferencePath("." + File.separator + objectName + ".obj");
+        setReferencePath("." + File.separator + "models" + File.separator + objectName + ".obj");
         loadBaseObjectVerticesFromReferenceFile();
         loadTransformationMatricesFromLine(line);
     }
@@ -82,6 +82,7 @@ public class Model
                         //all others
                 }
             }
+
         }
         catch(Exception e)
         {
@@ -96,13 +97,20 @@ public class Model
                                Double.parseDouble(splitLine[2]),
                                Double.parseDouble(splitLine[3]),0};
 
-        rotationMatrix = createRotationMatrixFromSingleRow(new DoubleMatrix(1,4,rotColumn));
+        DoubleMatrix rotColMatrix = new DoubleMatrix(1,4,rotColumn);
+        Geometry.normalize(rotColMatrix);
+        for(int i = 0; i < 3; ++i)
+        {
+            //create 3 separate rotation matrices...?
+        }
+        rotationMatrix = createRotationMatrixFromSingleRow(rotColMatrix);
+
 
         angleTheta = Double.parseDouble(splitLine[4]);
 
         angleTheta = Math.toRadians(angleTheta);
 
-        double[] firstRow = new double[]{Math.cos(angleTheta),-Math.sin(angleTheta),0,0};
+        double[] firstRow = new double[]{Math.cos(angleTheta),(-1 * Math.sin(angleTheta)) +0.0f,0,0};
         double[] secondRow = new double[]{Math.sin(angleTheta),Math.cos(angleTheta),0,0};
         double[] thirdRow = new double[]{0,0,1,0};
         double[] fourthRow = new double[]{0,0,0,1};
@@ -122,6 +130,7 @@ public class Model
 
     public void transformAllVertices()
     {
+        //Geometry.normalize(rotationMatrix);
         DoubleMatrix R = rotationMatrix.mmul(axisAngleRotMatrix);
         R.mmuli(rotationMatrix.transpose());
 
@@ -187,15 +196,17 @@ public class Model
     private DoubleMatrix getOrthonormalRowVector(DoubleMatrix row)
     {
         DoubleMatrix orthoRow = new DoubleMatrix(row.getColumns());
+        orthoRow.put(row.argmin(),1);
 
-        if(row.get(2) == 0)
-        {
-            orthoRow.put(2,1);
-        }
-        else
-        {
-            orthoRow.put(row.argmin(),1);
-        }
+
+//        if(row.get(2) == 0)
+//        {
+//            orthoRow.put(2,1);
+//        }
+//        else
+//        {
+//            orthoRow.put(row.argmin(),1);
+//        }
 
         Geometry.normalize(orthoRow);
         return orthoRow;
