@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class DriverFactory
 {
     private static ModelMap mappedModels = new ModelMap();
+    private static Camera MainCamera = new Camera();
 
     public static void BuildAllFromDriverFile(String filename)
     {
@@ -31,10 +32,47 @@ public class DriverFactory
     {
         String[] splitLine = line.split(" ");
         String objectType = splitLine[0].toLowerCase();
-        String objectName = splitLine[splitLine.length-1].replace(".obj","");
+
         switch(objectType)
         {
+            case "eye":
+                double[] eye = {Double.parseDouble(splitLine[1]),
+                                Double.parseDouble(splitLine[2]),
+                                Double.parseDouble(splitLine[3])};
+                MainCamera.setEye(eye);
+                break;
+            case "look":
+                double[] look = {Double.parseDouble(splitLine[1]),
+                                 Double.parseDouble(splitLine[2]),
+                                 Double.parseDouble(splitLine[3])};
+                MainCamera.setLookPoint(look);
+                break;
+            case "up":
+                double[] up = {Double.parseDouble(splitLine[1]),
+                               Double.parseDouble(splitLine[2]),
+                               Double.parseDouble(splitLine[3])};
+                MainCamera.setUpDirection(up);
+                break;
+            case "d":
+                MainCamera.setFocalLength(Double.parseDouble(splitLine[1]));
+                break;
+            case "bounds":
+                double[] bounds = {Double.parseDouble(splitLine[1]),
+                                   Double.parseDouble(splitLine[2]),
+                                   Double.parseDouble(splitLine[3]),
+                                   Double.parseDouble(splitLine[4])};
+                MainCamera.setLBRTBounds(bounds);
+                break;
+            case "res":
+                int[] res = {Integer.parseInt(splitLine[1]),
+                                Integer.parseInt(splitLine[2])};
+                MainCamera.setResolution(res);
+                break;
+            case "sphere":
+                //do sphere things
+                break;
             case "model":
+                String objectName = splitLine[splitLine.length-1].replace(".obj","");
                 Model model = new Model(objectName,line);
                 model.transformAllVertices();
                 mappedModels.addModel(model);
@@ -55,5 +93,10 @@ public class DriverFactory
         {
             m.saveAsObj(dirPath);
         }
+    }
+
+    static Camera getMainCamera()
+    {
+        return MainCamera;
     }
 }
