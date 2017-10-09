@@ -11,7 +11,6 @@ public class ModelMap
     public String addModel(Model m)
     {
         String baseName = m.getName();
-        //adding as "cube.obj"
         if(models.containsKey(baseName))
         {
             renameToMatchConvention(m);

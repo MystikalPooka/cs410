@@ -21,14 +21,7 @@ public class Model
 
     private ArrayList<String> faces = new ArrayList<>();
 
-    public Model(String objectName)
-    {
-        setName(objectName);
-        setReferencePath("." + File.separator + objectName + ".obj");
-        loadBaseObjectVerticesFromReferenceFile();
-    }
-
-    public Model(String objectName, String line)
+    Model(String objectName, String line)
     {
         setName(objectName);
         setReferencePath("." + File.separator + "models" + File.separator + objectName + ".obj");
@@ -36,22 +29,22 @@ public class Model
         loadTransformationMatricesFromLine(line);
     }
 
-    public void setName(String name)
+    void setName(String name)
     {
         this.Name = name;
     }
 
-    public String getName()
+    String getName()
     {
         return this.Name;
     }
 
-    public void setReferencePath(String refPath)
+    private void setReferencePath(String refPath)
     {
         this.referenceFilePath = refPath;
     }
 
-    public void loadBaseObjectVerticesFromReferenceFile()
+    private void loadBaseObjectVerticesFromReferenceFile()
     {
         try
         {
@@ -90,7 +83,7 @@ public class Model
         }
     }
 
-    public void loadTransformationMatricesFromLine(String line)
+    private void loadTransformationMatricesFromLine(String line)
     {
         String[] splitLine = line.split(" ");
         double[] rotColumn = { Double.parseDouble(splitLine[1]),
@@ -99,15 +92,8 @@ public class Model
 
         DoubleMatrix rotColMatrix = new DoubleMatrix(1,4,rotColumn);
         Geometry.normalize(rotColMatrix);
-        for(int i = 0; i < 3; ++i)
-        {
-            //create 3 separate rotation matrices...?
-        }
         rotationMatrix = createRotationMatrixFromSingleRow(rotColMatrix);
-
-
         angleTheta = Double.parseDouble(splitLine[4]);
-
         angleTheta = Math.toRadians(angleTheta);
 
         double[] firstRow = new double[]{Math.cos(angleTheta),(-1 * Math.sin(angleTheta)) +0.0f,0,0};
@@ -124,15 +110,22 @@ public class Model
                                  Double.parseDouble(splitLine[7]),
                                  Double.parseDouble(splitLine[8]),1};
 
-        translationMatrix = new DoubleMatrix().eye(4);
+        translationMatrix = DoubleMatrix.eye(4);
         translationMatrix.putColumn(3,new DoubleMatrix(transColumn));
     }
 
-    public void transformAllVertices()
+    void transformAllVertices()
     {
-        //Geometry.normalize(rotationMatrix);
-        DoubleMatrix R = rotationMatrix.mmul(axisAngleRotMatrix);
-        R.mmuli(rotationMatrix.transpose());
+        DoubleMatrix R = DoubleMatrix.eye(4);
+        if(axisAngleRotMatrix.equals(DoubleMatrix.eye(4)))
+        {
+            System.out.println("Equal");
+        }
+        else
+        {
+            R = rotationMatrix.mmul(axisAngleRotMatrix);
+            R.mmuli(rotationMatrix.transpose());
+        }
 
         for(DoubleMatrix m : R.rowsAsList())
         {
@@ -153,32 +146,31 @@ public class Model
         {
             //System.out.println("V:" + vector);
             vector.put(3,0);
-            vector = R.mmul(vector);
             transformedObjectVertices.putRow(row,vector);
             ++row;
-            System.out.println("Dot:" + vector);
+            //System.out.println("Dot:" + vector);
         }
 
         //4x4 I * scale = scale on all diagonal entries
-        DoubleMatrix S = DoubleMatrix.eye(4).mmuli(scaleFactor);
+        DoubleMatrix S = DoubleMatrix.eye(4).mmul(scaleFactor);
         S.putColumn(3,new DoubleMatrix(new double[]{0,0,0,1}));
+
         DoubleMatrix T = DoubleMatrix.eye(4);
         T.putColumn(3,translationMatrix.transpose());
 
-        transformedObjectVertices = transformedObjectVertices.mmul(S);
-        transformedObjectVertices = transformedObjectVertices.mmul(T);
-        System.out.println("TRANSFORMED:");
-        for(DoubleMatrix tv : transformedObjectVertices.rowsAsList())
-        {
-            System.out.println(tv.toString());
-        }
+        transformedObjectVertices = transformedObjectVertices.transpose();
+        transformedObjectVertices = R.mmul(S).mmul(T).mmul(transformedObjectVertices).transpose();
+        //transformedObjectVertices = transformedObjectVertices.mmul(Big);
+        //System.out.println("TRANSFORMED:");
+//        for(DoubleMatrix tv : transformedObjectVertices.rowsAsList())
+//        {
+//            System.out.println(tv.toString());
+//        }
     }
 
     private DoubleMatrix createRotationMatrixFromSingleRow(DoubleMatrix W)
     {
-        DoubleMatrix rotMatrix = new DoubleMatrix(0,4);
-
-        rotMatrix = DoubleMatrix.concatVertically(W,rotMatrix);
+        DoubleMatrix rotMatrix = new DoubleMatrix(4,4);
 
         DoubleMatrix M = getOrthonormalRowVector(W);
         DoubleMatrix U = getNormedCrossProduct(W,M);
@@ -186,11 +178,17 @@ public class Model
         if(U.dot(W) != 0) System.out.println("W.U not 0");
         if(U.dot(M) != 0) System.out.println("M.U not 0");
 
-        rotMatrix = DoubleMatrix.concatVertically(V,rotMatrix);
-        rotMatrix = DoubleMatrix.concatVertically(U,rotMatrix);
-        rotMatrix = DoubleMatrix.concatVertically(rotMatrix, new DoubleMatrix(new double[][]{{0, 0, 0, 1}}));
+        rotMatrix.putRow(0,U);
+        rotMatrix.putRow(1,V);
+        rotMatrix.putRow(2,W);
+        rotMatrix.putRow(3,new DoubleMatrix(1,4,new double[]{0,0,0,1}));
 
-        return rotMatrix;
+//        rotMatrix = DoubleMatrix.concatVertically(V,rotMatrix);
+//        rotMatrix = DoubleMatrix.concatVertically(U,rotMatrix);
+        //rotMatrix = DoubleMatrix.concatVertically(rotMatrix, new DoubleMatrix(new double[][]{{0, 0, 0, 1}}));
+
+
+        return Geometry.normalizeColumns(rotMatrix);
     }
 
     private DoubleMatrix getOrthonormalRowVector(DoubleMatrix row)
@@ -198,17 +196,7 @@ public class Model
         DoubleMatrix orthoRow = new DoubleMatrix(row.getColumns());
         orthoRow.put(row.argmin(),1);
 
-
-//        if(row.get(2) == 0)
-//        {
-//            orthoRow.put(2,1);
-//        }
-//        else
-//        {
-//            orthoRow.put(row.argmin(),1);
-//        }
-
-        Geometry.normalize(orthoRow);
+        //Geometry.normalize(orthoRow);
         return orthoRow;
     }
 
@@ -238,7 +226,7 @@ public class Model
         cross.addi(j);
         cross.addi(k);
         cross.put(3,0);
-        return Geometry.normalize(cross);
+        return cross;//Geometry.normalize(cross);
     }
 
     public void saveAsObj(String folderPath)
