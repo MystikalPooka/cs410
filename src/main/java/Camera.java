@@ -17,15 +17,16 @@ public class Camera {
 
     public void build() {
         WVector = Eye.sub(LookPoint);
-        Geometry.normalize(WVector);
+        WVector = Geometry.normalize(WVector);
 
         UVector = MatrixMath.Cross(Up, WVector);
-        Geometry.normalize(UVector);
+        UVector = Geometry.normalize(UVector);
 
         VVector = MatrixMath.Cross(WVector, UVector);
+        VVector = Geometry.normalize(VVector);
     }
 
-    private static final double zeroDelta = 0.0000001;
+    private static final double zeroDelta = 0.0001;
     public void castAllRays()
     {
         double[][] tValues = new double[Resolution[0]][Resolution[1]];
@@ -35,46 +36,33 @@ public class Camera {
         {
             for (int col = 0; col < Resolution[1]; ++col)
             {
+                DoubleMatrix pxpy = getPixelPoint(row, col);
+                double pixelMin = Double.MAX_VALUE;
                 for (Model m : DriverFactory.getAllLoadedModels())
                 {
                     DoubleMatrix[] allFaces = m.getFaceTriangles();
                     for (DoubleMatrix face : allFaces)
                     {
-                        DoubleMatrix pxpy = getPixelPoint(row, col);
                         double t = castRay(pxpy, face.getRow(0), face.getRow(1), face.getRow(2));
-                        if(t < 0) continue;
-                        tValues[row][col] = t;
-                        if (t < tMin)
-                            tMin = t;
-                        if (t > tMax)
-                            tMax = t;
+                        if(t <= 0-zeroDelta) continue;
+
+                        if (t < pixelMin)
+                            pixelMin = t;
                     }
+                }
+                tValues[row][col] = pixelMin;
+                if(pixelMin < tMin)
+                {
+                    tMin = pixelMin;
+                }
+                if(pixelMin > tMax && pixelMin != Double.MAX_VALUE)
+                {
+                    tMax = pixelMin;
                 }
             }
         }
         SetColorsOfPixels(tValues,tMin, tMax);
     }
-
-    private void SetColorsOfPixels(double[][] tvalues, double tmin, double tmax)
-    {
-        Image = new int[Resolution[0]][Resolution[1]*3];
-
-        double divisor = tmax - tmin;
-        for (int row = 0; row < Resolution[0]; ++row)
-        {
-            for (int col = 0; col < Resolution[1]; col+=3)
-            {
-                double ratio = (2*(tvalues[row][col/3]-tmin))/divisor;
-                int r = (int)Math.max(0,255*(1-ratio));
-                int b = (int)Math.max(0,255*(ratio-1));
-                int g = (255-b-r);
-                Image[row][col] = r;
-                Image[row][col+1] = g;
-                Image[row][col+2] = b;
-            }
-        }
-    }
-
     //
     //Casts a ray into the scene.
     //RETURNS point of intersection (if it intersects a triangle)
@@ -85,6 +73,39 @@ public class Camera {
         DoubleMatrix IntBetaGammaT = MatrixMath.LUCramerRayIntersection(a,b,c,LOrigin,rayDirection);
         return IntBetaGammaT.get(0) == 1 ? IntBetaGammaT.get(3) : -1;
     }
+    private void SetColorsOfPixels(double[][] tvalues, double tmin, double tmax)
+    {
+        Image = new int[Resolution[0]][Resolution[1]*3];
+
+        double divisor = tmax - tmin;
+        int r,g,b;
+        for (int row = 0; row < Image.length; ++row)
+        {
+            for (int col = 0; col < Image[0].length; col+=3)
+            {
+                double t = tvalues[row][col/3];
+                if(Math.abs(t) > zeroDelta)
+                {
+                    double ratio = 2*(t-tmin)/divisor;
+                    r = (int)Math.max(0,255*(1-ratio));
+                    b = (int)Math.max(0,255*(ratio-1));
+                    g = (255-b-r);
+                }
+                else
+                {
+                    r = 239;
+                    g = 239;
+                    b = 239;
+                }
+
+                Image[row][col] = r;
+                Image[row][col+1] = g;
+                Image[row][col+2] = b;
+            }
+        }
+    }
+
+
 
     private DoubleMatrix getPixelPoint(int row, int col)
     {
@@ -92,7 +113,10 @@ public class Camera {
         double bottom = LBRTBounds[1];
         double px = (row/(Resolution[0]-1)*(LBRTBounds[2] - left))+left;
         double py = (col/((Resolution[1]-1)*(LBRTBounds[3] - bottom)))+bottom;
-        return Eye.add(WVector.muli(-1*FocalLength)).add((UVector.muli(px))).add((VVector.muli(py)));
+        DoubleMatrix pxpy = Eye.add(WVector.mul(-1*FocalLength));
+        pxpy.addi(UVector.mul(px));
+        pxpy.addi(VVector.mul(py));
+        return pxpy;
     }
 
     public void SaveToPPM(String filename)

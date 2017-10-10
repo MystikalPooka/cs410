@@ -38,7 +38,7 @@ public class MatrixMath
 
     //Returns a 1x4 column vector, where the first 3 columns denote t, beta, and gamme
     //the fourth column will be either 0 or 1. a 0 means this matrix is singular
-    private static final double zeroDelta = 0.0000001;
+    private static final double zeroDelta = 0.0001;
     public static DoubleMatrix CramersSolve(DoubleMatrix A,DoubleMatrix B,DoubleMatrix C, DoubleMatrix rayPt, DoubleMatrix rayDir)
     {
         //array access optimized
@@ -109,7 +109,7 @@ public class MatrixMath
         DoubleMatrix M = new DoubleMatrix(new double[][]{{axmbx,axmcx,dx},{aymby,aymcy,dy},{azmbz,azmcz,dz}});
 
         double detM = LUDet(M);
-        if(Math.abs(detM) < zeroDelta)
+        if(Math.abs(detM) <= zeroDelta)
             return DoubleMatrix.zeros(1,1);
 
         double lx = rayPt.get(0); double ly = rayPt.get(1); double lz = rayPt.get(2);
@@ -120,7 +120,7 @@ public class MatrixMath
         double detM1 = LUDet(M1);
         double beta = 0;
         if(Math.abs(detM1) > zeroDelta) beta = detM1/detM;
-        if(beta < 0-zeroDelta) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
+        if(beta <= 0-zeroDelta) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
 
         DoubleMatrix M2 = new DoubleMatrix(new double[][]{{axmbx,axmlx,dx},{aymby,aymly,dy},{azmbz,azmlz,dz}});
 
@@ -128,21 +128,20 @@ public class MatrixMath
 
         double gamma = 0;
         if(Math.abs(detM2) > zeroDelta) gamma = detM2/detM;
-        if(gamma < 0-zeroDelta || beta+gamma > 1+zeroDelta) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
+        if(gamma < 0-zeroDelta || beta+gamma > 1) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
 
         DoubleMatrix M3 = new DoubleMatrix(new double[][]{{axmbx,axmcx,axmlx},{aymby,aymcy,aymly},{azmbz,azmcz,azmlz}});
 
         double detM3 = LUDet(M3);
         double t = 0;
         if(Math.abs(detM3) > zeroDelta) t = detM3/detM;
-        if(t < 0-zeroDelta || Math.abs(t) < zeroDelta) return DoubleMatrix.zeros(1,1);
+        if(t <= 0-zeroDelta || Math.abs(t) <= zeroDelta) return DoubleMatrix.zeros(1,1);
 
         return new DoubleMatrix(4,1,1,beta,gamma,t);
     }
 
     public static double CholeskyDet(DoubleMatrix a)
     {
-        final DoubleMatrix cholesky = Decompose.cholesky(a);
         DoubleMatrix detA = (Decompose.cholesky(a)).diag();
         return Math.pow(detA.prod(),2);
     }

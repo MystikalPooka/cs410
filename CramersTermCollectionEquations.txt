@@ -1,5 +1,6 @@
 M1 = ((c-w)k - (b-h)l)(c-o) - ((c-w)j-(a-g)l)(b-o) + ((b-h)j-(a-g)k)(c-o)
 	kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+c^2k-ack-chj
+	
 M2 = ((c-o)k -(b-n)l)(a-d)-((c-o)j-(a-m)l)(b-e)+((b-n)j-(a-m)k)(c-f)
 	dko-ako-ejo+bjo-dln+aln+fjn-cjn+elm-blm-fkm+ckm-ael+bdl+afk-cdk-bfj+cej
 
@@ -11,19 +12,11 @@ M = (((c-w)k - (b-h)l)(a-d) - ((c-w)j-(a-g)l)(b-e) + ((b-h)j-(a-g)k)(c-f))
 
 
 
-M1/M =
-(kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+c^2k-ack-chj)/
-(dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej)
-
-(kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+cck-ack-chj) 
-/(dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej)
-
-
-
 FULL STATISTICAL ANALYSIS(ignoring singles):
 dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej
 -eow+bow-dnw+anw-emw-bmw+cew-aew+bdw-bcw-fho+dho+cho-aho+bfo+aeo-bdo-bco+fgn-cgn-afn+cdn-cem+bcm-cfh-cdh-cch+ach-bfg+bcg-bcf+abf+bcc-abc
-dko-ako-ejo+bjo-dln+aln+fjn-cjn+elm-blm-fkm+ckm-ael+bdl+afk-cdk-bfj+cej_kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+cck-ack-chj
+dko-ako-ejo+bjo-dln+aln+fjn-cjn+elm-blm-fkm+ckm-ael+bdl+afk-cdk-bfj+cej
+kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+cck-ack-chj
 
 dkw akw ejw bjw dhl ahl egl bgl ael bdl fgk cgk afk cdk fhj chj bfj cej eow bow dnw anw emw bmw cew aew bdw bcw fho dho cho aho bfo aeo bdo bco fgn cgn afn cdn cem bcm cfh cdh cch ach bfg bcg bcf abf bcc abc dko ako ejo bjo dln aln fjn cjn elm blm fkm ckm ael bdl afk cdk bfj cej kow jow ckw bjw hlo glo blo alo gko cko ako hjo cjo bjo chl bgl bcl abl cgk cck ack chj
 C	36	BC	8	DK	4	AB	3	AC	2	BJW	2
