@@ -1,0 +1,18 @@
+axz	36	axyaxz	8	ayxbxy	4	axxaxy	3	axxaxz	2	axybxxazz	2
+axy	28	bxydzz	6	axzayx	4	axxayz	3	axzbxx	2	axyayzbxx	2
+dzz	26	bxxdzz	6	axyayx	4	ayxbxz	3	axzayz	2	axzazybxx	2
+bxy	20	axzazy	6	axzayy	4	axxbxy	3	ayydzx	2	axxayzbxy	2
+bxz	20	axyayz	5	axxayy	4	ayzazx	3	ayxdzy	2		
+axx	20	axzbxy	5	azybxx	4	ayyazz	2	axyazx	2		
+bxx	18	azydzz	4	ayybxz	3	dzyazz	2	ayydzz	2		
+azz	18	dzzazz	4	axybxz	3	dzxazz	2	axyazxbxz	2		
+ayz	16	axybxx	4	ayzbxy	3	bxxdzy	2	axyayxbxz	2		
+azy	16	azybxz	4	bxyazz	3	bxydzx	2	axzayybxx	2		
+ayy	14	ayybxx	4	bxxazz	3	bxzdzx	2	axzayxbxy	2		
+ayx	14	axzazx	4	ayzbxx	3	bxzdzy	2	axxayybxz	2		
+azx	12	bxzdzz	4	ayxazy	3	axxbxz	2	axzazxbxy	2		
+dzy	10	azxbxz	4	ayzazy	3	azxdzy	2	axxbxydzz	2		
+dzx	8	azxbxy	4	axzaxz	3	axxazy	2	axybxxdzz	2
+
+bxdycz-axdycz-bydxcz+aydxcz-bxcydz+axcydz+bycxdz-aycxdz-axbydz+aybxdz-bzcxdy+azcxdy+axbzdy-azbxdy+bzcydx-azcydx-aybzdx+azbydx
+dylzcz-dxlzcz-azdycz+aydxcz-cydzlz+cxdzlz+aydzlz-axdzlz-cxdylz-azdylz+axdylz+cydxlz+azdxlz-aydxlz+azcydz-aycxdz-ayazdz+axaydz+azcxdy+azazdy-axazdy-azcydx

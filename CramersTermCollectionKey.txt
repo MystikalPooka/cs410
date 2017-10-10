@@ -1,0 +1,11 @@
+ax = a | dx = j
+ay = b | dy = k
+az = c | dz = l
+
+bx = d | lx = m
+by = e | ly = n
+bz = f | lz = o
+
+cx = g
+cy = h
+cz = w

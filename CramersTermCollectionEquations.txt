@@ -1,0 +1,59 @@
+M1 = ((c-w)k - (b-h)l)(c-o) - ((c-w)j-(a-g)l)(b-o) + ((b-h)j-(a-g)k)(c-o)
+	kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+c^2k-ack-chj
+M2 = ((c-o)k -(b-n)l)(a-d)-((c-o)j-(a-m)l)(b-e)+((b-n)j-(a-m)k)(c-f)
+	dko-ako-ejo+bjo-dln+aln+fjn-cjn+elm-blm-fkm+ckm-ael+bdl+afk-cdk-bfj+cej
+
+M3 = ( (b-n)(c-w) - (b-h)(c-o))(a-d)-((a-m)(c-w)-(a-w)(c-o))(b-e)+((c-o)(b-h)-(a-g)(b-n))(c-f)
+-eow+bow-dnw+anw-emw-bmw+cew-aew+bdw-bcw-fho+dho+cho-aho+bfo+aeo-bdo-bco+fgn-cgn-afn+cdn-cem+bcm-cfh-cdh-cch+ach-bfg+bcg-bcf+abf+bcc-abc
+
+M = (((c-w)k - (b-h)l)(a-d) - ((c-w)j-(a-g)l)(b-e) + ((b-h)j-(a-g)k)(c-f))
+	dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej
+
+
+
+M1/M =
+(kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+c^2k-ack-chj)/
+(dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej)
+
+(kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+cck-ack-chj) 
+/(dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej)
+
+
+
+FULL STATISTICAL ANALYSIS(ignoring singles):
+dkw-akw-ejw+bjw-dhl+ahl+egl-bgl-ael+bdl-fgk+cgk+afk-cdk+fhj-chj-bfj+cej
+-eow+bow-dnw+anw-emw-bmw+cew-aew+bdw-bcw-fho+dho+cho-aho+bfo+aeo-bdo-bco+fgn-cgn-afn+cdn-cem+bcm-cfh-cdh-cch+ach-bfg+bcg-bcf+abf+bcc-abc
+dko-ako-ejo+bjo-dln+aln+fjn-cjn+elm-blm-fkm+ckm-ael+bdl+afk-cdk-bfj+cej_kow-jow-ckw+bjw-hlo+glo+blo-alo-gko-cko+ako+hjo+cjo-bjo+chl-bgl-bcl+abl+cgk+cck-ack-chj
+
+dkw akw ejw bjw dhl ahl egl bgl ael bdl fgk cgk afk cdk fhj chj bfj cej eow bow dnw anw emw bmw cew aew bdw bcw fho dho cho aho bfo aeo bdo bco fgn cgn afn cdn cem bcm cfh cdh cch ach bfg bcg bcf abf bcc abc dko ako ejo bjo dln aln fjn cjn elm blm fkm ckm ael bdl afk cdk bfj cej kow jow ckw bjw hlo glo blo alo gko cko ako hjo cjo bjo chl bgl bcl abl cgk cck ack chj
+C	36	BC	8	DK	4	AB	3	AC	2	BJW	2
+B	28	KO	6	CD	4	AF	3	CJ	2	BFJ	2
+O	26	JO	6	BD	4	DL	3	CF	2	CHJ	2
+K	20	CH	6	CE	4	AK	3	EM	2	AFK	2
+L	20	BF	5	AE	4	FG	3	DN	2		
+A	20	CK	5	HJ	4	EW	2	BG	2		
+J	18	HO	4	EL	3	NW	2	EO	2		
+W	18	OW	4	BL	3	MW	2	BGL	2		
+F	16	BJ	4	FK	3	JN	2	BDL	2		
+H	16	HL	4	KW	3	KM	2	CEJ	2		
+E	14	EJ	4	JW	3	LM	2	CDK	2		
+D	14	CG	4	FJ	3	LN	2	AEL	2		
+G	12	LO	4	DH	3	AL	2	CGK	2		
+N	10	GL	4	FH	3	GN	2	AKO	2		
+M	8	GK	4	CC	3	AH	2	BJO	2		
+
+az	36	ayaz	8	bxdy	4	axay	3	axaz	2	aydxcz	2
+ay	28	dylz	6	azbx	4	axbz	3	azdx	2	aybzdx	2
+lz	26	dxlz	6	aybx	4	bxdz	3	azbz	2	azcydx	2
+dy	20	azcy	6	azby	4	axdy	3	bylx	2	axbzdy	2
+dz	20	aybz	5	axby	4	bzcx	3	bxly	2		
+ax	20	azdy	5	cydx	4	bycz	2	aycx	2		
+dx	18	cylz	4	bydz	3	lycz	2	bylz	2		
+cz	18	lzcz	4	aydz	3	lxcz	2	aycxdz	2		
+bz	16	aydx	4	bzdy	3	dxly	2	aybxdz	2		
+cy	16	cydz	4	dycz	3	dylx	2	azbydx	2		
+by	14	bydx	4	dxcz	3	dzlx	2	azbxdy	2		
+bx	14	azcx	4	bzdx	3	dzly	2	axbydz	2		
+cx	12	dzlz	4	bxcy	3	axdz	2	azcxdy	2		
+ly	10	cxdz	4	bzcy	3	cxly	2	axdylz	2		
+lx	8	cxdy	4	azaz	3	axcy	2	aydxlz	2

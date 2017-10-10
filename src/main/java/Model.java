@@ -20,13 +20,16 @@ public class Model
     private DoubleMatrix translationMatrix = new DoubleMatrix(0,4);
 
     private ArrayList<String> faces = new ArrayList<>();
+    private DoubleMatrix[] faceTriangles;
 
     Model(String objectName, String line)
     {
         setName(objectName);
         setReferencePath("." + File.separator + "models" + File.separator + objectName + ".obj");
-        loadBaseObjectVerticesFromReferenceFile();
+        loadFromDriverFile();
         loadTransformationMatricesFromLine(line);
+        transformAllVertices();
+        loadAllFaces();
     }
 
     void setName(String name)
@@ -44,7 +47,7 @@ public class Model
         this.referenceFilePath = refPath;
     }
 
-    private void loadBaseObjectVerticesFromReferenceFile()
+    private void loadFromDriverFile()
     {
         try
         {
@@ -75,12 +78,14 @@ public class Model
                         //all others
                 }
             }
-
+            fr.close();
+            buffer.close();
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+
     }
 
     private void loadTransformationMatricesFromLine(String line)
@@ -173,8 +178,9 @@ public class Model
         DoubleMatrix rotMatrix = new DoubleMatrix(4,4);
 
         DoubleMatrix M = getOrthonormalRowVector(W);
-        DoubleMatrix U = MatrixMath.Cross(W,M);
-        DoubleMatrix V = MatrixMath.Cross(U,W);
+
+        DoubleMatrix U = MatrixMath.HeterogenousRow(MatrixMath.Cross(W,M));
+        DoubleMatrix V = MatrixMath.HeterogenousRow(MatrixMath.Cross(U,W));
         if(U.dot(W) != 0) System.out.println("W.U not 0");
         if(U.dot(M) != 0) System.out.println("M.U not 0");
 
@@ -183,7 +189,7 @@ public class Model
         rotMatrix.putRow(2,W);
         rotMatrix.putRow(3,new DoubleMatrix(1,4,0,0,0,1));
 
-        return Geometry.normalizeColumns(rotMatrix);
+        return Geometry.normalizeRows(rotMatrix);
     }
 
     private DoubleMatrix getOrthonormalRowVector(DoubleMatrix row)
@@ -195,6 +201,26 @@ public class Model
         return orthoRow;
     }
 
+    public void loadAllFaces()
+    {
+        faceTriangles = new DoubleMatrix[faces.size()];
+        for (int i = 0; i < faces.size();++i)
+        {
+            String face = faces.get(i);
+            String[] pointIndices = face.split("[/ ]");
+
+            DoubleMatrix triangle = new DoubleMatrix(3, 3);
+            for (int p = 0; p < pointIndices.length/3; ++p)
+            {
+                int index = Integer.parseInt(pointIndices[p*3]);
+                DoubleMatrix row = transformedObjectVertices.getRow(index-1);
+                triangle.putRow(p, row);
+            }
+            faceTriangles[i] = triangle;
+        }
+    }
+
+    public DoubleMatrix[] getFaceTriangles() {return faceTriangles;}
 
     public void saveAsObj(String folderPath)
     {

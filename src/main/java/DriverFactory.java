@@ -74,7 +74,6 @@ public class DriverFactory
             case "model":
                 String objectName = splitLine[splitLine.length-1].replace(".obj","");
                 Model model = new Model(objectName,line);
-                model.transformAllVertices();
                 mappedModels.addModel(model);
                 break;
             default:
