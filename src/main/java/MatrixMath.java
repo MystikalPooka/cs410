@@ -101,10 +101,11 @@ public class MatrixMath
         double ax = A.get(0); double ay = A.get(1); double az = A.get(2);
         double bx = B.get(0); double by = B.get(1); double bz = B.get(2);
         double cx = C.get(0); double cy = C.get(1); double cz = C.get(2);
-        double dx = 0-rayDir.get(0); double dy = 0-rayDir.get(1); double dz = 0-rayDir.get(2);
+        double dx = rayDir.get(0); double dy = rayDir.get(1); double dz = rayDir.get(2);
 
         double axmbx = ax-bx; double aymby = ay-by; double azmbz = az-bz;
         double axmcx = ax-cx; double aymcy = ay-cy; double azmcz = az-cz;
+
         DoubleMatrix M = new DoubleMatrix(new double[][]{{axmbx,axmcx,dx},{aymby,aymcy,dy},{azmbz,azmcz,dz}});
 
         double detM = LUDet(M);
@@ -113,11 +114,12 @@ public class MatrixMath
 
         double lx = rayPt.get(0); double ly = rayPt.get(1); double lz = rayPt.get(2);
         double axmlx = ax-lx; double aymly = ay-ly; double azmlz = az-lz;
+
         DoubleMatrix M1 = new DoubleMatrix(new double[][]{{axmlx,axmcx,dx},{aymly,aymcy,dy},{azmlz,azmcz,dz}});
 
         double detM1 = LUDet(M1);
         double beta = 0;
-        if(detM1 != 0) beta = detM1/detM;
+        if(Math.abs(detM1) > zeroDelta) beta = detM1/detM;
         if(beta < 0-zeroDelta) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
 
         DoubleMatrix M2 = new DoubleMatrix(new double[][]{{axmbx,axmlx,dx},{aymby,aymly,dy},{azmbz,azmlz,dz}});
@@ -125,14 +127,14 @@ public class MatrixMath
         double detM2 = LUDet(M2);
 
         double gamma = 0;
-        if(detM2 != 0) gamma = detM2/detM;
-        if(gamma < zeroDelta || beta+gamma > 1) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
+        if(Math.abs(detM2) > zeroDelta) gamma = detM2/detM;
+        if(gamma < 0-zeroDelta || beta+gamma > 1+zeroDelta) return DoubleMatrix.zeros(1,1); //Point is not inside triangle
 
         DoubleMatrix M3 = new DoubleMatrix(new double[][]{{axmbx,axmcx,axmlx},{aymby,aymcy,aymly},{azmbz,azmcz,azmlz}});
 
         double detM3 = LUDet(M3);
         double t = 0;
-        if(detM3 != 0) t = detM3/detM;
+        if(Math.abs(detM3) > zeroDelta) t = detM3/detM;
         if(t < 0-zeroDelta || Math.abs(t) < zeroDelta) return DoubleMatrix.zeros(1,1);
 
         return new DoubleMatrix(4,1,1,beta,gamma,t);

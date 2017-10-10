@@ -1,8 +1,6 @@
 import org.jblas.DoubleMatrix;
 import org.jblas.Geometry;
 
-import java.util.HashSet;
-
 public class Camera {
     private DoubleMatrix Eye;
     private DoubleMatrix LookPoint;
@@ -16,7 +14,6 @@ public class Camera {
     private DoubleMatrix VVector;
 
     private int[][] Image;
-    private DoubleMatrix[] trianglePoints;
 
     public void build() {
         WVector = Eye.sub(LookPoint);
@@ -67,7 +64,7 @@ public class Camera {
         {
             for (int col = 0; col < Resolution[1]; col+=3)
             {
-                double ratio = (2*(tvalues[row][col]-tmin))/divisor;
+                double ratio = (2*(tvalues[row][col/3]-tmin))/divisor;
                 int r = (int)Math.max(0,255*(1-ratio));
                 int b = (int)Math.max(0,255*(ratio-1));
                 int g = (255-b-r);
